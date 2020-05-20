@@ -20,20 +20,20 @@ class Pipl
         $this->client = $client ?? (new Client());
     }
 
-    public function search(array $fields)
+    public function search(array $fields, $envFile = 'PIPL_API_KEY')
     {
         if (empty($fields)) {
             throw new Exception("Search function parameter can't be empty");
         }
         
-        $url = $this->buildUrl($fields);
+        $url = $this->buildUrl($fields, $envFile);
         $response = $this->client->get($url);
         return json_decode($response->getBody(), true);
     }
 
-    protected function buildUrl(array $fields)
+    protected function buildUrl(array $fields, $envFile)
     {
-        $key = env('PIPL_API_KEY');
+        $key = env($envFile);
         $baseUrl = rtrim(env('PIPL_API_BASE_URL', 'http://api.pipl.com/search/'), '/');
         $url = $baseUrl . "/?key={$key}";
 
